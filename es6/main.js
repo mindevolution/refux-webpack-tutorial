@@ -3,30 +3,44 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const counter = (state = 0, action) => {
-  if(action.type == 'INCREMENT') {
+  if(action.type === 'INCREMENT') {
     return state + 1;
-  } else if (action.type == 'DECREMENT') {
+  } else if (action.type === 'DECREMENT') {
     return state - 1;
   } else {
     return state;
   }
 };
 
-const store = createStore(counter);
-
-store.dispatch({ type: 'INCREMENT'});
-
 const Counter = ({ 
 	value,
-	  onIncrement,
-	  onDecrement
-	}) => (
-	<h1>{value}</h1>
+	onIncrement,
+	onDecrement
+}) => (
+	<div>
+		<h1>{value}</h1>
+		<button onClick={onIncrement}>+</button>
+		<button onClick={onDecrement}>-</button>
+	</div>
 );
+
+const store = createStore(counter);
 
 const render = () => {
 	ReactDOM.render(
-		<Counter value={store.getState()} />,
+		<Counter 
+			value={store.getState()} 
+			onIncrement={() => 
+				store.dispatch({
+					type: 'INCREMENT'
+				})
+			}
+			onDecrement={() => 
+				store.dispatch({
+					type: 'DECREMENT'
+				})
+			}
+			/>,
 		document.getElementById('root')
 	);
 }
@@ -34,7 +48,3 @@ const render = () => {
 store.subscribe(render);
 
 render();
-
-document.addEventListener('click', () => {
-  store.dispatch({type: 'INCREMENT'});
-});
