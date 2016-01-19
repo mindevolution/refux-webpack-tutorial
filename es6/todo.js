@@ -1,22 +1,24 @@
+import React from 'react';
+import {Component} from 'react';
+import ReactDOM from 'react-dom';
+import {createStore, combineReducers} from 'redux';
+
 const todo = (state, action) => {
 	switch (action.type) {
 		case 'ADD_TODO':
-		  return[
-			  {
+		  return {
 				  id: action.id,
 				  text: action.text,
 				  completed: false
-			  }
-		  ];
+			  };
 		case 'TOGGLE_TODO':
 		  if (state.id !== action.id) {
 			  return state;
 		  }
 
-		  alert('TOGGLE_TODO');
 		  return {
-			id: state.id,
-			text: state.text,
+				  id: state.id,
+				  text: state.text,
 			completed: !state.completed
 		  };
 		default:
@@ -31,45 +33,70 @@ const todos = (state = [], action) => {
 			  todo(undefined, action)
 		  ];
 		case 'TOGGLE_TODO':
-		  return state.map(t => todo(t[0], action));
+		  return state.map(t => todo(t, action));
 		default:
 			return state;
 	}
 };
 
-import {createStore} from 'redux';
+const visibilityFilter = (state = 'SHOW_ALL',
+		action) => {
+	switch (action.type) {
+		case 'SET_VISIBILITY_FILTER':
+			return action.filter;
+		default:
+			return state;
+	}
+};
 
-const store = createStore(todos);
 
-console.log('Initial state:');
-console.log(store.getState());
-console.log('--------------');
 
-console.log('Dispathing ADD_TOO.');
-store.dispatch({
-	type: 'ADD_TODO',
-	id: 0,
-	text: 'Learn Redux'
+const todoApp = combineReducers({
+	todos,
+	visibilityFilter
 });
-console.log('Current state:');
-console.log(store.getState());
-console.log('--------------');
 
-console.log('Dispathing ADD_TOO.');
-store.dispatch({
-	type: 'ADD_TODO',
-	id: 0,
-	text: 'Go Shopping'
-});
-console.log('Current state:');
-console.log(store.getState());
-console.log('--------------');
+const store = createStore(todoApp);
 
-console.log('Dispatching TOGGLE_TODO.');
-store.dispatch({
-	type: 'TOGGLE_TODO',
-	id: 0
-});
-console.log('Current state:');
-console.log(store.getState());
-console.log('--------------');
+let nextTodoId = 0;
+
+class TodoApp extends React.Component {
+	render() {
+		return (
+			<div>
+			<input ref={node => {
+				this.input = node;
+			}} />
+				<button onClick={() => {
+					store.dispatch({
+						type: 'ADD_TODO',
+						text: this.input.value,
+						id: nextTodoId++
+					});
+					this.input.value = '';
+				}}>
+				Add Todo
+				</button>
+				<ul>
+					{this.props.todos.map(todo => 
+						<li id={todo.id} key={todo.id}>
+							{todo.text}
+						</li>
+					)}
+				</ul>
+			</div>
+			   );
+	}
+}
+
+const render = () => {
+	ReactDOM.render(
+		<TodoApp 
+			todos={store.getState().todos}
+		/>,
+		document.getElementById('root')
+	);
+};
+
+store.subscribe(render);
+render();
