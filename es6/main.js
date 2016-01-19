@@ -45,6 +45,60 @@ const render = () => {
 	);
 }
 
+const addCounter = (list) => {
+	return [...list, 0];
+};
+
+const removeCounter = (list, index) => {
+	return [
+		...list.slice(0, index),
+		...list.slice(index + 1)
+	];
+};
+
+const incrementCounter = (list, index) => {
+	return [
+		...list.slice(0, index),
+		list[index] + 1,
+		...list.slice(index + 1)
+		];
+};
+
+const testAddCounter = () => {
+	const listBefore = [];
+	const listAfter = [0];
+}
+
+const toggleTodo = (todo) => {
+	return Object.assign({}, todo, {
+		completed: !todo.completed
+	});
+};
+
+const testToggleTodo = () => {
+	const todoBefore = {
+		id: 0,
+		text: 'Learn Redux',
+		completed: false
+	};
+	const todoAfter = {
+		id: 0,
+		text: 'Learn Redux',
+		completed: true
+	};
+
+	deepFreeze(todoBefore);
+
+	expect(
+		toggleTodo(todoBefore)
+	).toEqual(todoAfter);
+};
+
+testToggleTodo();
+console.log('All tests passwd');
+
+
+
 store.subscribe(render);
 
 render();
