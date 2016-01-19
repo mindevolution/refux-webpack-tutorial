@@ -1,3 +1,5 @@
+import {createStore} from 'redux';
+
 const counter = (state = 0, action) => {
   if(action.type == 'INCREMENT') {
     return state + 1;
@@ -8,7 +10,6 @@ const counter = (state = 0, action) => {
   }
 };
 
-const {createStore} = Redux;
 const store = createStore(counter);
 
 store.dispatch({ type: 'INCREMENT'});
