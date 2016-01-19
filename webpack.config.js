@@ -3,8 +3,8 @@ var webpack = require('webpack');
 
 module.exports = {
 	entry: {
-		counter: './es6/counter.js',
-		todo: './es6/todo.js'
+		counter: ['./es6/counter.js'],
+		todo: ['./es6/todo.js']
 	},
     output: {
         path: path.join(__dirname, 'dist'),
