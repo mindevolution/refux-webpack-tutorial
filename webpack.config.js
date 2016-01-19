@@ -2,10 +2,13 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-    entry: './es6/main.js',
+	entry: {
+		counter: './es6/counter.js',
+		todo: './es6/todo.js'
+	},
     output: {
-        path: __dirname,
-        filename: 'bundle.js'
+        path: path.join(__dirname, 'dist'),
+        filename: '[name].entry.js'
     },
     module: {
         loaders: [
