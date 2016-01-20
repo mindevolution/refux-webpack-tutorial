@@ -215,45 +215,31 @@ const getVisibleTodos = (
 	}
 }
 
-class VisibleTodoList extends React.Component {
-	componentDidMount() {
-		// es6 store = this.props.store
-		const { store } = this.context;
-		store.subscribe(() =>
-			this.forceUpdate()
-		);
-	}
-
-	componentWillUnmount() {
-		this.unsubscribe();
-	}
-	render() {
-		const props = this.props;
-		const { store } = this.context;
-		const state = store.getState();
-
-		return (
-			<TodoList
-				todos={
-					getVisibleTodos(
-						state.todos,
-						state.visibilityFilter
-					)
-				}
-				onTodoClick={id =>
-					store.dispatch({
-						type: 'TOGGLE_TODO',
-						id
-					})
-				}
-			/>
-		);
-	}
-}
-VisibleTodoList.contextTypes = {
-	store: React.PropTypes.object
+const mapStateToProps = (state) => {
+	return {
+		todos: getVisibleTodos(
+			state.todos,
+			state.visibilityFilter
+		)
+	};
 };
 
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onTodoClick: (id) => {
+			dispatch({
+				type: 'TOGGLE_TODO',
+				id
+			})
+		} 
+	};
+};
+
+import { connect } from 'react-redux';
+const VisibleTodoList = connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(TodoList);
 
 let nextTodoId = 0;
 
