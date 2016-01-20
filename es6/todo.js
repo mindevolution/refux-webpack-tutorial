@@ -172,7 +172,7 @@ const TodoList = ({
 	</ul>
 );
 
-const AddTodo = (props, { store }) => {
+let AddTodo = ({ dispatch }) => {
 	let input;
 
 	return (
@@ -193,9 +193,7 @@ const AddTodo = (props, { store }) => {
 		</div>
 	);
 }
-AddTodo.contextTypes = {
-	store: React.PropTypes.object
-};
+AddTodo = connect()(AddTodo);
 
 const getVisibleTodos = (
 	todos,
@@ -215,7 +213,9 @@ const getVisibleTodos = (
 	}
 }
 
-const mapStateToProps = (state) => {
+const mapStateToTodoListProps = (
+	state
+) => {
 	return {
 		todos: getVisibleTodos(
 			state.todos,
@@ -223,8 +223,7 @@ const mapStateToProps = (state) => {
 		)
 	};
 };
-
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToTodoListProps = (dispatch) => {
 	return {
 		onTodoClick: (id) => {
 			dispatch({
@@ -234,11 +233,10 @@ const mapDispatchToProps = (dispatch) => {
 		} 
 	};
 };
-
 import { connect } from 'react-redux';
 const VisibleTodoList = connect(
-	mapStateToProps,
-	mapDispatchToProps
+	mapStateToTodoListProps,
+	mapDispatchToTodoListProps
 )(TodoList);
 
 let nextTodoId = 0;
