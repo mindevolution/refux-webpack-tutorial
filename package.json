@@ -17,6 +17,7 @@
     "babelify": "^7.2.0",
     "react": "^0.14.6",
     "react-dom": "^0.14.6",
+    "react-redux": "^4.0.6",
     "redux": "^3.0.5"
   }
 }
